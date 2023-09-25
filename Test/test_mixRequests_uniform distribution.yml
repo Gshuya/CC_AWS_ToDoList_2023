@@ -1,0 +1,77 @@
+config:
+  target: "https://s7n1qrrf3i.execute-api.us-east-1.amazonaws.com"
+  payload:
+    - path: "./data.csv"
+      fields:
+        - "email"
+        - "password"
+        - "task"
+        - "priority"
+      loadAll: true
+      skipHeader: true 
+    - path: "./dataUser.csv"
+      fields:
+        - "User_email"
+        - "User_password"
+      loadAll: true
+      skipHeader: true   
+  phases:
+  #TEST should be excuted at least 10 times to get the average result (CLI)
+    - duration: 180 # 3 minutes
+      arrivalRate: 5
+      rampTo: 10
+      name: "Worm-up"
+    - duration: 360 # 6 minutes
+      arrivalRate: 10
+      rampTo: 50
+      name: "Rump-up"
+    - duration: 900 # 15 minutes, 45000 requests/10 minutes = 4500 requests/minute = 75 requests/second
+      arrivalRate: 50
+      name: "steady"
+    - duration: 360 # 6 minutes
+      arrivalRate: 50
+      rampTo: 1
+      name: "Rump-down"
+    - pause: 300 # 5 minutes
+      name: "pause"
+scenarios:
+  - name: "Sign up"
+    flow:
+        - post:
+            url: "/addUser"
+            json:
+              Email: "{{ User_email }}"
+              Password: "{{ User_password }}"
+  - name: "Post task"
+    flow:
+        - post:
+            url: "/put"
+            json:
+              id: "{{ email }}"
+              task: "{{ task }}"
+              priority: "{{ priority}}"
+              password: "{{ password }}"
+  - name: "get task by priority"
+    flow:
+        - get:
+            url: "/get"
+            qs:
+              id: "{{ email }}"
+              password: "{{ password }}"
+              priority: "{{ priority }}"
+  - name: "get all task"
+    flow:
+        - get:
+            url: "/getalltask"
+            qs:
+              id: "{{ email }}"
+              password: "{{ password }}"
+              priority: "{{ priority }}"
+
+  - name: "delete task"
+    flow:
+        - post:
+            url: "/delete"
+            json:
+              id: "{{ email }}"
+              task: "{{ task }}"

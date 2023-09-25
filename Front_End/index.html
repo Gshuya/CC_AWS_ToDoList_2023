@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ToDo List</title>
+        <link href="./style.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="ct">
+            <h2>ToDo List</h2>
+            <label>Task: </label>
+            <input class="input" type="text" id="inp" placeholder="Task..." required>
+            <br>
+            <label>Priority: </label>
+            <select class="input" id="priority" required>
+                <option value="High" selected>High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+            <br>
+            <br>
+            <span onclick="addItem()" class="add">Add</span>
+            <br>
+            
+            
+        </header>
+        <div class="filterList">
+            <label>Filter: </label>
+            <span class="filter" id="all" onclick="sortList('all')">ALL</span>
+            <span class="filter" id="Low" onclick="sortList('Low')">LOW</span>
+            <span class="filter" id="Medium" onclick="sortList('Medium')">MEDIUM</span>
+            <span class="filter" id="High" onclick="sortList('High')">HIGH</span>
+        </div>
+        <div class="info"><label>Displayed tasks: <span id="inf">0</span></label></div>
+        <div class="scr">
+            <ul id="todos" >
+                <li>"Are you ready to complete the tasks?" </li>
+            </ul>
+        </div>
+        
+
+        <script src="./script.js"></script>
+    </body>
+</html>
